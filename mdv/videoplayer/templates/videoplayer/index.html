@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div id="video" class="center-block">
+    <a href="" id="adlink">
+        <video id="bbb" class="center-block" controls>
+            <source src="{% static "bbb.mp4" %}" type="video/mp4"/>
+            <track src="{% static "test.vtt" %}" kind="metadata" default/>
+        </video>
+    </a>
+</div>
+
+<div class="row">
+    <div id="buyprev" class="col-md-6">
+        <button id="buyprevbtn" type="button" class="btn btn-primary center-block">Buy previous video segment</button>
+    </div>
+    <div id="buynext" class="col-md-6">
+        <button id="buynextbtn" type="button" class="btn btn-primary center-block">Buy next video segment</button>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+var ad = document.getElementById("adlink");
+var vid = document.getElementById("bbb");
+var prev = document.getElementById("buyprevbtn");
+var next = document.getElementById("buynextbtn");
+var segid = null;
+
+vid.addEventListener('timeupdate', update, false);
+prev.addEventListener('click', buy, false);
+next.addEventListener('click', buy, false);
+
+function buy() {
+    var where = "";
+    vid.pause();
+    console.log(segid);
+    if (this.id == "buyprevbtn") {
+        where = "before";
+    } else {
+        where = "after";
+    }
+
+    window.location = "/buy/"+where+"/"+segid;
+}
+
+function update() {
+    var cues = vid.textTracks[0].activeCues;
+    if (cues) {
+        for(var i=0; i < cues.length; i++) {
+            var data = cues[i].text;
+            ad.href = data.split("|")[1];
+            segid = data.split("|")[0];
+        }
+    }
+}
+</script>
+{% endblock %}
