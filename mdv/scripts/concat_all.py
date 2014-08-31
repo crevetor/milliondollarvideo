@@ -18,13 +18,15 @@ def process_videos(vid_out, text_out):
 
     start = starts.get()
 
-    while start.next_video is not None:
+    while True:
         logging.debug("Cating file %s", os.path.join(settings.MEDIA_ROOT,
                                                 start.vidfile.name))
         clip = VideoFileClip(os.path.join(settings.MEDIA_ROOT,
                                                 start.vidfile.name))
         clips.append(clip)
         start = start.next_video
+        if not start:
+            break
 
     output = concatenate(clips)
     output.size = (800, 600)
