@@ -5,7 +5,7 @@ from .forms import VideoUploadForm
 
 def buy(request, where, vidid):
     frag = None
-    if VideoFragment.objecouts.count() != 0:
+    if VideoFragment.objects.count() != 0:
         frag = VideoFragment.objects.get(pk=int(vidid))
         if not frag:
             return HttpResponse(status=404)
