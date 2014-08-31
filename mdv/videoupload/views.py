@@ -13,7 +13,24 @@ def buy(request, where, vidid):
     if request.method == 'POST':
         form = VideoUploadForm(request.POST, request.FILES)
         if form.is_valid():
+            newfrag = form.save(commit=False)
+            if not frag:
+                newfrag.save()
+                return HttpResponseRedirect('/')
+
+            if where == "before":
+                newfrag.prev_video = frag.prev_video
+                newfrag.next_video = frag
+                newfrag.save()
+                frag.prev_video = newfrag
+            elif where == "after":
+                newfrag.next_video = frag.next_video
+                newfrag.prev_video = frag
+                newfrag.save()
+                frag.next_video = newfrag
+            frag.save()
             return HttpResponseRedirect('/')
+
 
     else:
         form = VideoUploadForm()
