@@ -4,9 +4,11 @@ from .models import VideoFragment
 from .forms import VideoUploadForm
 
 def buy(request, where, vidid):
-    frag = VideoFragment.objects.get(pk=int(vidid))
-    if not frag:
-        return HttpResponse(status=404)
+    frag = None
+    if VideoFragment.objects.count() != 0:
+        frag = VideoFragment.objects.get(pk=int(vidid))
+        if not frag:
+            return HttpResponse(status=404)
 
     if request.method == 'POST':
         form = VideoUploadForm(request.POST, request.FILES)
